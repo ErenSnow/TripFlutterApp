@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hi_cache/flutter_hi_cache.dart';
+import 'package:trip_flutter_app/util/screen_adapter_helper.dart';
 
 import 'navigator/tab_navigator.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder<dynamic>(
         future: HiCache.preInit(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          ScreenHelper.init(context); // 初始化屏幕适配工具
           if (snapshot.connectionState == ConnectionState.done) {
             // if (CacheUtil.getToken() == null) {
             //   return LoginPage();

@@ -43,6 +43,8 @@ dependencies:
   flutter_hi_cache: ^0.0.1
   # Toast
   fluttertoast: ^8.2.11
+  # Banner
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
