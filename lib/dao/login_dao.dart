@@ -21,7 +21,7 @@ class LoginDao {
     paramsMap["password"] = password;
     Uri uri = Uri.https(AppConfig.baseUrl, "/user/login", paramsMap);
     final response = await http.post(uri, headers: hiHeaders());
-    Utf8Decoder utf8decoder = Utf8Decoder();
+    Utf8Decoder utf8decoder = Utf8Decoder(); // 中文乱码
     String bodyString = utf8decoder.convert(response.bodyBytes);
     print(bodyString);
     if (response.statusCode == 200) {

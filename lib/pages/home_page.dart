@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:trip_flutter_app/dao/login_dao.dart';
 import 'package:trip_flutter_app/widget/banner_widget.dart';
 
+import '../dao/home_dao.dart';
+import '../model/banner_model.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,13 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
-  final bannerList = [
-    "https://o.devio.org/images/other/rn-cover2.png",
-    "https://o.devio.org/images/other/rn-cover2.png",
-    "https://o.devio.org/images/other/rn-cover2.png",
-    "https://o.devio.org/images/other/rn-cover2.png",
-    "https://o.devio.org/images/other/rn-cover2.png",
-  ];
+  List<BannerItem?> bannerList = [];
 
   double appBarAlpha = 0.0;
 
@@ -48,6 +45,12 @@ class _HomePageState extends State<HomePage>
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _handleRefresh();
   }
 
   get _appBar => Opacity(
@@ -98,4 +101,15 @@ class _HomePageState extends State<HomePage>
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<void> _handleRefresh() async {
+    try {
+      BannerModel? model = await HomeDao.fetch();
+      setState(() {
+        bannerList = model?.data ?? [];
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

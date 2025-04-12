@@ -1,10 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_flutter_app/util/navigator_util.dart';
 import 'package:trip_flutter_app/util/screen_adapter_helper.dart';
+
+import '../model/banner_model.dart';
 
 /// Banner轮播图组件
 class BannerWidget extends StatefulWidget {
-  final List<String> bannerList;
+  final List<BannerItem?> bannerList;
 
   const BannerWidget({super.key, required this.bannerList});
 
@@ -26,7 +29,7 @@ class _BannerWidgetState extends State<BannerWidget> {
               widget.bannerList.map((item) => _tabImage(item, width)).toList(),
           carouselController: _controller,
           options: CarouselOptions(
-            height: 160.px,
+            height: 200.px,
             autoPlay: true,
             viewportFraction: 1.0,
             onPageChanged: (index, reason) {
@@ -41,10 +44,16 @@ class _BannerWidgetState extends State<BannerWidget> {
     );
   }
 
-  Widget _tabImage(String imageUrl, width) {
+  Widget _tabImage(BannerItem? bannerBean, width) {
     return GestureDetector(
-      onTap: () {},
-      child: Image.network(imageUrl, width: width, fit: BoxFit.cover),
+      onTap: () {
+        NavigatorUtil.goWeb(bannerBean?.url ?? "");
+      },
+      child: Image.network(
+        bannerBean?.imagePath ?? "",
+        width: width,
+        fit: BoxFit.cover,
+      ),
     );
   }
 

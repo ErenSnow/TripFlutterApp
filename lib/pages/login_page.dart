@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../dao/login_dao.dart';
 import '../util/navigator_util.dart';
@@ -70,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
           Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-              onTap: () => _jumpRegistration(),
+              onTap: () => NavigatorUtil.goWeb("www.baidu.com"),
               child: Text("注册账号", style: TextStyle(color: Colors.white)),
             ),
           ),
@@ -98,14 +97,6 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       print(e);
-    }
-  }
-
-  /// 跳转H5
-  _jumpRegistration() async {
-    Uri uri = Uri.parse("https://www.baidu.com");
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch $uri';
     }
   }
 }

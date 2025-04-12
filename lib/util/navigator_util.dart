@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_flutter_app/pages/home_page.dart';
 import 'package:trip_flutter_app/pages/login_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NavigatorUtil {
   /// 用于在获取不到context的地方，如dao中跳转页面时使用，需要在HomePage赋值
@@ -29,5 +30,13 @@ class NavigatorUtil {
       _context!,
       MaterialPageRoute(builder: (context) => LoginPage()),
     );
+  }
+
+  /// 跳转H5
+  static void goWeb(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $uri';
+    }
   }
 }
