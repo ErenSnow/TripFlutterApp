@@ -4,6 +4,7 @@ import 'package:trip_flutter_app/widget/banner_widget.dart';
 
 import '../dao/home_dao.dart';
 import '../model/banner_model.dart';
+import '../widget/loading_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,29 +21,16 @@ class _HomePageState extends State<HomePage>
 
   int appbarScrollOffset = 100;
 
+  bool _loading = true;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Stack(
-        children: [
-          MediaQuery.removePadding(
-            removeTop: true, // 移除顶部空白
-            context: context,
-            child: NotificationListener(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollUpdateNotification &&
-                    scrollNotification.depth == 0) {
-                  // 通过depth来过滤指定widget发出的滚动事件，depth==0表示最外层的列表发出的滚动事件
-                  _onScroll(scrollNotification.metrics.pixels);
-                }
-                return false;
-              },
-              child: _listView,
-            ),
-          ),
-          _appBar,
-        ],
+      backgroundColor: const Color(0xfff2f2f2),
+      body: LoadingContainer(
+        isLoading: _loading,
+        child: Stack(children: [_contentView, _appBar]),
       ),
     );
   }
@@ -52,6 +40,26 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _handleRefresh();
   }
+
+  get _contentView => MediaQuery.removePadding(
+    removeTop: true, // 移除顶部空白
+    context: context,
+    child: RefreshIndicator(
+      onRefresh: _handleRefresh,
+      color: Colors.blue,
+      child: NotificationListener(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollUpdateNotification &&
+              scrollNotification.depth == 0) {
+            // 通过depth来过滤指定widget发出的滚动事件，depth==0表示最外层的列表发出的滚动事件
+            _onScroll(scrollNotification.metrics.pixels);
+          }
+          return false;
+        },
+        child: _listView,
+      ),
+    ),
+  );
 
   get _appBar => Opacity(
     opacity: appBarAlpha,
@@ -105,11 +113,21 @@ class _HomePageState extends State<HomePage>
   Future<void> _handleRefresh() async {
     try {
       BannerModel? model = await HomeDao.fetch();
+      if (model == null) {
+        setState(() {
+          _loading = false;
+        });
+        return;
+      }
       setState(() {
         bannerList = model?.data ?? [];
+        _loading = false;
       });
     } catch (e) {
       debugPrint(e.toString());
+      setState(() {
+        _loading = false;
+      });
     }
   }
 }
