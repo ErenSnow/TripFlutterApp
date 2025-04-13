@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:trip_flutter_app/dao/login_dao.dart';
+import 'package:trip_flutter_app/util/navigator_util.dart';
 import 'package:trip_flutter_app/widget/banner_widget.dart';
+import 'package:trip_flutter_app/widget/search_bar_widget.dart';
 
 import '../dao/home_dao.dart';
 import '../model/banner_model.dart';
+import '../util/view_util.dart';
 import '../widget/loading_container.dart';
+
+const searchBarDefaultText = '网红打开地 景点 酒店 美食';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -61,27 +66,54 @@ class _HomePageState extends State<HomePage>
     ),
   );
 
-  get _appBar => Opacity(
-    opacity: appBarAlpha,
-    child: Stack(
+  get _appBar {
+    //获取刘海屏实际的Top 安全边距
+    double top = MediaQuery.of(context).padding.top;
+    return Column(
       children: [
-        Container(
-          height: 80,
-          decoration: BoxDecoration(color: Colors.white),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Text("首页"),
+        shadowWarp(
+          child: Container(
+            padding: EdgeInsets.only(top: top),
+            height: 60 + top,
+            decoration: BoxDecoration(
+              color: Color.fromARGB((appBarAlpha * 255).toInt(), 255, 255, 255),
+            ),
+            child: SearchBarWidget(
+              searchBarType:
+                  appBarAlpha > 0.2
+                      ? SearchBarType.homeLight
+                      : SearchBarType.home,
+              inputBoxClick: _jumpToSearch,
+              defaultText: searchBarDefaultText,
+              rightButtonClick: () {
+                LoginDao.logout();
+              },
             ),
           ),
         ),
+        // bottom line
+        Container(
+          height: appBarAlpha > 0.2 ? 0.5 : 0,
+          decoration: const BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 0.5)],
+          ),
+        ),
       ],
-    ),
-  );
+    );
+  }
 
   get _listView => ListView(
     children: [
       BannerWidget(bannerList: bannerList),
+      SearchBarWidget(
+        searchBarType:
+            appBarAlpha > 0.2 ? SearchBarType.homeLight : SearchBarType.home,
+        inputBoxClick: _jumpToSearch,
+        defaultText: searchBarDefaultText,
+        rightButtonClick: () {
+          LoginDao.logout();
+        },
+      ),
       SizedBox(height: 1000, child: ListTile(title: Text("data"))),
     ],
   );
@@ -129,5 +161,9 @@ class _HomePageState extends State<HomePage>
         _loading = false;
       });
     }
+  }
+
+  void _jumpToSearch() {
+    NavigatorUtil.goLogin();
   }
 }
