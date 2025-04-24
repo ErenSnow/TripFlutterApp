@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_flutter_app/pages/search_page.dart';
 
 import '../pages/home_page.dart';
 import '../util/navigator_util.dart';
@@ -22,7 +23,7 @@ class _TabNavigatorState extends State<TabNavigator> {
       body: PageView(
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
-        children: [HomePage(), HomePage(), HomePage(), HomePage()],
+        children: [HomePage(), SearchPage(), HomePage(), HomePage()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Colors.blue,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trip_flutter_app/dao/login_dao.dart';
+import 'package:trip_flutter_app/pages/search_page.dart';
 import 'package:trip_flutter_app/util/navigator_util.dart';
 import 'package:trip_flutter_app/widget/banner_widget.dart';
 import 'package:trip_flutter_app/widget/search_bar_widget.dart';
@@ -105,15 +106,6 @@ class _HomePageState extends State<HomePage>
   get _listView => ListView(
     children: [
       BannerWidget(bannerList: bannerList),
-      SearchBarWidget(
-        searchBarType:
-            appBarAlpha > 0.2 ? SearchBarType.homeLight : SearchBarType.home,
-        inputBoxClick: _jumpToSearch,
-        defaultText: searchBarDefaultText,
-        rightButtonClick: () {
-          LoginDao.logout();
-        },
-      ),
       SizedBox(height: 1000, child: ListTile(title: Text("data"))),
     ],
   );
@@ -164,6 +156,6 @@ class _HomePageState extends State<HomePage>
   }
 
   void _jumpToSearch() {
-    NavigatorUtil.goLogin();
+    NavigatorUtil.push(context, const SearchPage());
   }
 }
